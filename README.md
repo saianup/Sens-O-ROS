@@ -217,3 +217,135 @@ https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Writing-A-Sim
 3. Spawn another turtle, now when u move the turtle1 with the teleop key make the second turtle to follow it.
 
 ------------------------------------------------------------------------------------------------------------------------------------------
+**Odometry Sensors for Mobile Robots**
+
+1. Wheel Encoders.
+2. IMU (Inertial Measuring Unit).
+3. LIDAR
+4. Ultrasonic Sensor
+
+------------------------------------------------------------------------------------------------------------------------------------------
+**What is Sensor Fusion ?**
+
+  - Kalman Filters
+  - Extended Kalman filters
+  - Unscented Kalman filters
+
+------------------------------------------------------------------------------------------------------------------------------------------
+**Localisation Techniques**
+
+  - AMCL
+  - GMCL
+  - Particle filter
+
+------------------------------------------------------------------------------------------------------------------------------------------
+**SLAM Algorithms**
+
+  - ORAB SLAM2
+  - Cartographer SLAM
+  - Gmapping
+  - Hector SLAM
+
+------------------------------------------------------------------------------------------------------------------------------------------
+**Navigation Keywords**
+
+  - Local Costmap
+  - Global Costmap
+  - Local Planner
+  - Global Planner
+
+------------------------------------------------------------------------------------------------------------------------------------------
+**Gazebo Vs RViz, When and Why**
+
+Gazebo is a realistic physics-based simulator that allows one to test robots in virtual environment.
+
+RViz is a 3D visualization tool for ROS-based robots. It does not simulate the physics but visualises robot state, TFs, Sensor data and Planned paths etc. 
+
+------------------------------------------------------------------------------------------------------------------------------------------
+**LET'S UNDERSTAND A COMPLETE AUTONOMOUS MOBILE USING TURTLEBOT3 SIMULATIONS**
+
+**Follow the commands given below,**
+
+sudo apt install ros-humble-turtlebot3* -y
+
+mkdir -p ~/turtlebot3_ws/src
+
+cd ~/turtlebot3_ws/src/
+
+git clone -b humble https://github.com/ROBOTIS-GIT/DynamixelSDK.git
+
+git clone -b humble https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git
+
+git clone -b humble https://github.com/ROBOTIS-GIT/turtlebot3.git
+
+sudo apt install python3-colcon-common-extensions
+
+git clone -b humble https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git
+
+cd ~/turtlebot3_ws && colcon build --symlink-install
+
+export TURTLEBOT3_MODEL=burger
+
+ros2 launch turtlebot3_gazebo empty_world.launch.py
+
+export TURTLEBOT3_MODEL=waffle
+
+ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
+
+export TURTLEBOT3_MODEL=waffle_pi
+
+ros2 launch turtlebot3_gazebo turtlebot3_house.launch.py
+
+ros2 run turtlebot3_teleop teleop_keyboard
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+**IMPLEMENTATION OF SLAM**
+
+**Terminal 1**
+
+export TURTLEBOT3_MODEL=burger
+
+ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
+
+**Terminal 2**
+
+export TURTLEBOT3_MODEL=burger
+
+ros2 launch turtlebot3_cartographer cartographer.launch.py use_sim_time:=True
+
+**Terminal 3**
+
+export TURTLEBOT3_MODEL=burger
+
+ros2 run turtlebot3_teleop teleop_keyboard
+
+ros2 run nav2_map_server map_saver_cli -f ~/map
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+**NAVIGATION OF THE TURTLEBOT**
+
+**Terminal 1**
+
+export TURTLEBOT3_MODEL=burger
+
+ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
+
+**Terminal 2**
+
+export TURTLEBOT3_MODEL=burger
+
+ros2 launch turtlebot3_navigation2 navigation2.launch.py use_sim_time:=True map:=$HOME/map.yaml
+
+**To efficiently localise the mobile robot, we have to move the robot to shrink the probablistic points of the location of robot**
+
+ros2 run turtlebot3_teleop teleop_keyboard
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+**Autonomous Implementation of Turtlebot**
+
+Click on the 2D pose estimate option and select the desired location and orientation of the robot and watch the robot do its magic.
+
+------------------------------------------------------------------------------------------------------------------------------------------
