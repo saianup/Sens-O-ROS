@@ -384,4 +384,161 @@ Click on the 2D pose estimate option and select the desired location and orienta
 
 ------------------------------------------------------------------------------------------------------------------------------------------
 
+**Micro-ROS**
 
+Micro-ROS is an extension of ROS 2 tailored for microcontrollers, bringing the capabilities of ROS 2 to resource-constrained devices. It enables seamless integration of microcontroller-based nodes into ROS 2 ecosystems, facilitating communication between microcontrollers and more powerful processors in robotic systems.​
+
+**Architecture**
+
+![Screenshot from 2025-04-05 23-43-26](https://github.com/user-attachments/assets/105767c6-e96a-47ec-a595-f8d32716da68)
+
+
+**Key Features**
+
+1. Microcontroller-optimized client API supporting all major ROS concepts
+
+2. Seamless integration with ROS 2.
+
+3. Extremely resource-constrained but flexible middleware --- The middleware comes with built-in support for serial transports, UDP over Ethernet, Wi-Fi, and 6LoWPAN, and Bluetooth.
+
+4. Multi-RTOS support with generic build system.
+
+5. Vibrant community and ecosystem
+
+**Client Library (rclc)**
+
+The micro-ROS client library comprises the standard ROS 2 Client Support Library (rcl) and the rclc package. The rclc package provides convenience functions that simplify the creation and management of ROS 2 entities such as nodes, publishers, subscribers, services, and timers.
+
+**Communication Mechanism**
+
+ The micro-ROS client runs on the microcontroller, while the micro-ROS agent runs on a more powerful processor. They communicate using the Micro XRCE-DDS middleware, which supports various transport protocols. 
+
+**Utilities and Tools**
+
+1. Custom Allocators: Developers can define custom memory allocation methods to suit the needs of embedded systems, allowing for optimized memory management.​
+
+2. Time Synchronization: micro-ROS clients can synchronize their epoch time with the connected agent using an NTP-based protocol, accounting for transport layer delays.​
+
+3. Agent Ping: Clients can test the connection with the agent using a ping utility, even before initializing the micro-ROS context, to ensure connectivity.​
+
+4. Continuous Serialization: This utility allows clients to serialize and send data up to a customized size, useful for handling large messages or data streams.
+
+      ![Screenshot from 2025-04-05 22-29-06](https://github.com/user-attachments/assets/5ee93bde-5836-4500-b1ba-505b25458bbb)
+
+**Supported Hardware**  ---> https://micro.ros.org/docs/overview/hardware/
+
+**Supported RTOS**  ----> https://micro.ros.org/docs/overview/rtos/
+
+**Circuit Diagram**
+
+![WhatsApp Image 2025-04-06 at 00 13 47](https://github.com/user-attachments/assets/308c9e04-ee10-4dcb-93d1-02578a063f46)
+
+
+**Implementation of Micro-ROS**
+
+1. source /opt/ros/$ROS_DISTRO/setup.bash
+  
+2. mkdir microros_ws
+   
+3. cd microros_ws
+   
+4. git clone -b $ROS_DISTRO https://github.com/micro-ROS/micro_ros_setup.git src/micro_ros_setup
+
+5. sudo apt update && rosdep update
+   
+6. rosdep install --from-path src --ignore-src -y
+
+7. sudo apt-get install python3-pip
+    
+8. colcon build
+    
+9. source install/local_setup.bash
+
+10. ros2 run micro_ros_setup create_firmware_ws.sh freertos esp32  ----> This step need not be done because we already copied the firmware in your workspace.
+
+11. ros2 run micro_ros_setup configure_firmware.sh [Application_name] --transport serial   -----> This step is done to configure the firmware
+
+12. ros2 run micro_ros_setup build_firmware.sh   -----> Build Firmware
+
+13. ros2 run micro_ros_setup flash_firmware.sh  ------> Connect the ESP via USB cable and then flash.
+
+Till now the Micro-ROS client has been setup nd configured, now it's time to setup the Micro-ROS agent 
+
+1. ros2 run micro_ros_setup create_agent_ws.sh -----> Create a Micro-ROS agent.
+
+2. ros2 run micro_ros_setup build_agent.sh  ---> Build the created Micro-ROS agent.
+
+3. source install/setup.bash
+
+**Check the port by the following commands**
+
+ls /dev/ttyUSB*
+
+ls /dev/ttyACM*
+
+If any output has been generated (for example -- /dev/ttyUSB0) , then run the following command to run the Micro-ROS app
+
+ros2 run micro_ros_agent micro_ros_agent serial --dev /dev/ttyUSB0 
+
+**Important steps to be noted**
+
+1. Click on boot after the (COnnecting .....) is shown during the flash firmware step
+
+2. Click on EN/RESET after running the Micro-ROS agent to establish connection.
+
+
+**STEPS to work via Arduino IDE**
+
+1. python3 -m pip install pyserial
+
+2. mkdir Arduino
+
+3. cp ~/Downloads/arduino-ide_2.3.4_Linux_64bit.AppImage ~/Arduino
+
+4. sudo add-apt-repository universe
+
+5. sudo apt install libfuse2
+
+6. chmod +x arduino-ide_2.3.4_Linux_64bit.AppImage
+
+**The following step focusses on the setup of this USB connection**
+
+7. sudo usermod -a -G dialout [name]    -----> Setting your username (If username not known then use **whoami**)
+
+8. sudo chmod a+rw /dev/ttyUSB0    ----> Giving read and write permissions to the port
+
+9. cd Arduino
+
+10. sudo apt install gedit
+
+11. cd ~/.local/share/applications
+
+12. gedit arduino.desktop
+
+**Inside the file that has been just opened enter the following,**
+
+[Desktop Entry]
+
+Type=Application
+
+Name=Arduino IDE
+
+Exec=/home/anup/Arduino/arduino-ide_2.3.4_Linux_64bit.AppImage
+
+**Install ESP32 library in the IDE**
+
+https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json   ----> Paste this in additional board manager URL in the preferences section
+
+Select Board Manager -> esp32  ( Download the Espressif Systems board)
+
+**Install Micro-ROS for Arduino Library**
+
+https://github.com/micro-ROS/micro_ros_arduino/tree/humble  ---> Go to this website and download zip
+
+Paste the downloaded zip folder from /Downloads folder to the /Arduino folder in home directory
+
+Click sketch -> Include Library -> Add zip library -> Select the downloaded zip
+
+Upload the code in IDE and Run the micro-ROS agent like previously done 
+
+Voila - U have successfully reached the end of the material
