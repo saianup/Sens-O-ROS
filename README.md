@@ -192,10 +192,6 @@ Suited for logging and recording datasets for later visualization and analysis
 
 https://docs.ros.org/en/humble/Tutorials/Beginner-CLI-Tools/Introducing-Turtlesim/Introducing-Turtlesim.html
 
-------------------------------------------------------------------------------------------------------------------------------------------
-**To make a new directory-->** mkdir
-
-**To build a ROS workspace-->** colcon build
 
 ------------------------------------------------------------------------------------------------------------------------------------------
 **PUBLISHER AND SUBSCRIBER SAMPLE PROGRAMMING**
@@ -206,6 +202,44 @@ https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Writing-A-Sim
 **SERVICE AND CLIENT SAMPLE PROGRAMMING**
 
 https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Service-And-Client.html
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+**Procedure to run the code from above links**
+
+1. mkdir [workspace_name]/src -p       -----> To create a new workspace
+
+2. cd [workspace_name]                 -----> Navigate inside the workspace through terminal
+
+3. colcon build                        -----> Build the workspace to get the build, install and log folders
+
+4. cd src                              -----> Navigate inside the src folder
+
+5. ros2 pkg create --build-type ament_python [package_name]    -----> Create a new package
+
+6. cd [package_name]/[package_name]    -----> Navigate inside the package
+
+7. touch [program_name].py             -----> Create a new python file
+
+8. Complete the code in the created file.
+
+9. Open the package.xml file and write the executable dependencies used in the code. In our case,
+
+    <exec_depend>rclpy</exec_depend>
+
+    <exec_depend>std_msgs</exec_depend>
+
+10. Open the setup.py file and give the path to our program file inside the console scripts. In our case,
+
+    'talker = py_pubsub.publisher_:main',
+
+11. cd ../../..                       -----> Navigate out to the workspace name   [Path should be just workspace_name in the terminal]
+
+12. colcon build                      -----> Build the workspace to get the build, install and log folders.
+
+13. source install/setup.bash         -----> Source the workspace in the terminal
+
+14. ros2 run [package_name] [file]    -----> In our case [file] is talker. 
 
 ------------------------------------------------------------------------------------------------------------------------------------------
 **Time to test what we learnt and do something cool**
@@ -349,3 +383,5 @@ ros2 run turtlebot3_teleop teleop_keyboard
 Click on the 2D pose estimate option and select the desired location and orientation of the robot and watch the robot do its magic.
 
 ------------------------------------------------------------------------------------------------------------------------------------------
+
+
